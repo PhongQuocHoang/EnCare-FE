@@ -18,7 +18,7 @@ import React from 'react';
 const IMAGE_BACKGROUND = require('../../assets/image/login_background.png');
 const IMAGE_TITLELOGIN = require('../../assets/image/image_title_login.jpeg');
 
-const LoginForm = ({ navigation }) => {
+const RegisterForm = ({ navigation }) => {
     const [number, onChangeNumber] = React.useState('');
     const [text, onChangeText] = React.useState('');
 
@@ -27,10 +27,9 @@ const LoginForm = ({ navigation }) => {
             <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
                 <SafeAreaView style={styles.container}>
                     {/*  */}
-
                     <View style={styles.w_Title}>
-                        <Text style={styles.title}>Welcome to EnCare!</Text>
-                        <Image style={styles.logoTitle} source={IMAGE_TITLELOGIN} />
+                        <Text style={styles.title}>Welcom Onboard!</Text>
+                        <Text>Let us take care of your health</Text>
                     </View>
 
                     {/*  */}
@@ -39,8 +38,14 @@ const LoginForm = ({ navigation }) => {
                         style={styles.w_Input}
                     >
                         <ScrollView showsVerticalScrollIndicator={false}>
-                            <View>
+                            <View style={styles.w_Input}>
                                 <View style={styles.boxInput}>
+                                    <TextInput
+                                        style={styles.inputUser}
+                                        onChangeText={onChangeNumber}
+                                        value={text}
+                                        placeholder="Enter your full name"
+                                    />
                                     <TextInput
                                         style={styles.inputUser}
                                         onChangeText={onChangeNumber}
@@ -52,34 +57,34 @@ const LoginForm = ({ navigation }) => {
                                         style={styles.inputUser}
                                         onChangeText={onChangeText}
                                         value={text}
-                                        placeholder="Password"
+                                        placeholder="Enter Password"
                                         secureTextEntry={true}
                                     />
-                                    <View style={styles.forgot_Login}>
-                                        <TouchableOpacity
-                                            style={styles.forgotPass}
-                                            onPress={() => navigation.push('ForgotPassScreen')}
-                                        >
-                                            <Text style={{ color: '#50C2C9', fontSize: 14 }}>Forgot Password</Text>
-                                        </TouchableOpacity>
-                                        <TouchableOpacity style={styles.btn_Login}>
-                                            <Text style={{ color: 'white', fontWeight: '600', fontSize: 16 }}>
-                                                Login
-                                            </Text>
-                                        </TouchableOpacity>
-                                    </View>
+                                    <TextInput
+                                        style={styles.inputUser}
+                                        onChangeText={onChangeText}
+                                        value={text}
+                                        placeholder="Comfirm Password"
+                                        secureTextEntry={true}
+                                    />
+                                </View>
+                                <View style={styles.w_BtnRegister}>
+                                    <TouchableOpacity style={styles.btn_Register}>
+                                        <Text style={{ color: 'white', fontWeight: '600', fontSize: 16 }}>
+                                            Register
+                                        </Text>
+                                    </TouchableOpacity>
                                 </View>
                             </View>
                         </ScrollView>
                     </KeyboardAvoidingView>
                     {/*  */}
+                    <View style={styles.w_SignIn}>
+                        <View style={styles.alreadyHaveAcc}>
+                            <Text>Already have an account?</Text>
 
-                    <View style={styles.w_SignUp}>
-                        <View style={styles.dontAcc}>
-                            <Text>Don't have an account?</Text>
-
-                            <TouchableOpacity onPress={() => navigation.push('RegisterScreen')}>
-                                <Text style={{ color: '#50C2C9', fontWeight: '700', fontSize: 14 }}>Sign Up</Text>
+                            <TouchableOpacity onPress={() => navigation.goBack('LoginScreen')}>
+                                <Text style={{ color: '#50C2C9', fontWeight: '700', fontSize: 14 }}>Sign In</Text>
                             </TouchableOpacity>
                         </View>
                     </View>
@@ -98,32 +103,25 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
     },
-    //
     w_Title: {
         marginTop: 25,
-        height: '40%',
+        height: '25%',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'flex-end',
     },
     title: {
         fontWeight: '600',
-        fontSize: 23,
-        lineHeight: 60,
-        letterSpacing: 4,
+        fontSize: 19,
+        lineHeight: 40,
+        letterSpacing: 2,
     },
-    logoTitle: {
-        width: 260,
-        height: 180,
-        borderRadius: 14,
-    },
-    //
     w_Input: {
-        height: '50%',
+        height: '65%',
         alignItems: 'center',
     },
     boxInput: {
-        paddingTop: 50,
+        paddingTop: 30,
     },
     inputUser: {
         width: 280,
@@ -136,30 +134,23 @@ const styles = StyleSheet.create({
         borderRadius: 23,
         backgroundColor: 'rgba(106, 224, 217, 0.2)',
     },
-    forgot_Login: {
-        alignItems: 'center',
+    w_BtnRegister: {
+        marginTop: 95,
     },
-    forgotPass: {
-        marginTop: 30,
-        marginBottom: 40,
-    },
-    btn_Login: {
+    btn_Register: {
         width: 280,
         height: 45,
         alignItems: 'center',
         justifyContent: 'center',
         backgroundColor: 'rgba(80, 194, 201, 1)',
     },
-    //
-    w_SignUp: {
-        height: '10%',
+    w_SignIn: {
         alignItems: 'center',
         justifyContent: 'center',
     },
-    dontAcc: {
-        bottom: 30,
+    alreadyHaveAcc: {
         flexDirection: 'row',
     },
 });
 
-export default LoginForm;
+export default RegisterForm;
