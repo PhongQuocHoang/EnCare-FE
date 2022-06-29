@@ -13,15 +13,13 @@ import {
     Platform,
     ScrollView,
 } from 'react-native';
-import React from 'react';
-
+import React, { useState } from 'react';
+import { Formik } from 'formik';
+import { validateSchema } from '../../validation';
 const IMAGE_BACKGROUND = require('../../assets/image/login_background.png');
 const IMAGE_TITLELOGIN = require('../../assets/image/image_title_login.jpeg');
 
 const LoginForm = ({ navigation }) => {
-    const [number, onChangeNumber] = React.useState('');
-    const [text, onChangeText] = React.useState('');
-
     return (
         <ImageBackground style={styles.backgroundImg} source={IMAGE_BACKGROUND}>
             <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
@@ -40,35 +38,58 @@ const LoginForm = ({ navigation }) => {
                     >
                         <ScrollView showsVerticalScrollIndicator={false}>
                             <View>
-                                <View style={styles.boxInput}>
-                                    <TextInput
-                                        style={styles.inputUser}
-                                        onChangeText={onChangeNumber}
-                                        value={number}
-                                        placeholder="Enter phone number"
-                                        keyboardType="numeric"
-                                    />
-                                    <TextInput
-                                        style={styles.inputUser}
-                                        onChangeText={onChangeText}
-                                        value={text}
-                                        placeholder="Password"
-                                        secureTextEntry={true}
-                                    />
-                                    <View style={styles.forgot_Login}>
-                                        <TouchableOpacity
-                                            style={styles.forgotPass}
-                                            onPress={() => navigation.push('ForgotPassScreen')}
-                                        >
-                                            <Text style={{ color: '#50C2C9', fontSize: 14 }}>Forgot Password</Text>
-                                        </TouchableOpacity>
-                                        <TouchableOpacity style={styles.btn_Login}>
-                                            <Text style={{ color: 'white', fontWeight: '600', fontSize: 16 }}>
-                                                Login
-                                            </Text>
-                                        </TouchableOpacity>
-                                    </View>
-                                </View>
+                                <Formik
+                                    initialValues={{ phone: '', pass: '' }}
+                                    validationSchema={validateSchema}
+                                    onSubmit={(values) => console.log(values)}
+                                >
+                                    {({ handleChange, handleBlur, handleSubmit, values, errors, touched }) => (
+                                        <>
+                                            <View style={styles.boxInput}>
+                                                <View>
+                                                    <TextInput
+                                                        style={styles.inputUser}
+                                                        onChangeText={handleChange('phone')}
+                                                        onBlur={handleBlur('phone')}
+                                                        value={values.phone}
+                                                        placeholder="Enter phone number"
+                                                        keyboardType="number-pad"
+                                                    />
+                                                    {errors.phone && touched.phone ? (
+                                                        <Text style={{ color: 'red' }}>{errors.phone}</Text>
+                                                    ) : null}
+                                                </View>
+                                                <TextInput
+                                                    style={styles.inputUser}
+                                                    onChangeText={handleChange('pass')}
+                                                    onBlur={handleBlur('pass')}
+                                                    value={values.pass}
+                                                    placeholder="Password"
+                                                    secureTextEntry={true}
+                                                    keyboardType="visible-password"
+                                                />
+                                                <View style={styles.forgot_Login}>
+                                                    <TouchableOpacity
+                                                        style={styles.forgotPass}
+                                                        onPress={() => navigation.push('ForgotPassScreen')}
+                                                    >
+                                                        <Text style={{ color: '#50C2C9', fontSize: 14 }}>
+                                                            Forgot Password
+                                                        </Text>
+                                                    </TouchableOpacity>
+                                                    <TouchableOpacity style={styles.btn_Login}>
+                                                        <Text
+                                                            style={{ color: 'white', fontWeight: '600', fontSize: 16 }}
+                                                            onPress={handleSubmit}
+                                                        >
+                                                            Login
+                                                        </Text>
+                                                    </TouchableOpacity>
+                                                </View>
+                                            </View>
+                                        </>
+                                    )}
+                                </Formik>
                             </View>
                         </ScrollView>
                     </KeyboardAvoidingView>

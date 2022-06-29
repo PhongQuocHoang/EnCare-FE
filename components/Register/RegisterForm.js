@@ -14,14 +14,13 @@ import {
     ScrollView,
 } from 'react-native';
 import React from 'react';
+import { Formik } from 'formik';
+import { validateSchema } from '../../validation';
 
 const IMAGE_BACKGROUND = require('../../assets/image/login_background.png');
 const IMAGE_TITLELOGIN = require('../../assets/image/image_title_login.jpeg');
 
 const RegisterForm = ({ navigation }) => {
-    const [number, onChangeNumber] = React.useState('');
-    const [text, onChangeText] = React.useState('');
-
     return (
         <ImageBackground style={styles.backgroundImg} source={IMAGE_BACKGROUND}>
             <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
@@ -39,42 +38,83 @@ const RegisterForm = ({ navigation }) => {
                     >
                         <ScrollView showsVerticalScrollIndicator={false}>
                             <View style={styles.w_Input}>
-                                <View style={styles.boxInput}>
-                                    <TextInput
-                                        style={styles.inputUser}
-                                        onChangeText={onChangeNumber}
-                                        value={text}
-                                        placeholder="Enter your full name"
-                                    />
-                                    <TextInput
-                                        style={styles.inputUser}
-                                        onChangeText={onChangeNumber}
-                                        value={number}
-                                        placeholder="Enter phone number"
-                                        keyboardType="numeric"
-                                    />
-                                    <TextInput
-                                        style={styles.inputUser}
-                                        onChangeText={onChangeText}
-                                        value={text}
-                                        placeholder="Enter Password"
-                                        secureTextEntry={true}
-                                    />
-                                    <TextInput
-                                        style={styles.inputUser}
-                                        onChangeText={onChangeText}
-                                        value={text}
-                                        placeholder="Comfirm Password"
-                                        secureTextEntry={true}
-                                    />
-                                </View>
-                                <View style={styles.w_BtnRegister}>
-                                    <TouchableOpacity style={styles.btn_Register}>
-                                        <Text style={{ color: 'white', fontWeight: '600', fontSize: 16 }}>
-                                            Register
-                                        </Text>
-                                    </TouchableOpacity>
-                                </View>
+                                <Formik
+                                    initialValues={{ name: '', phone: '', pass: '', repass: '' }}
+                                    validationSchema={validateSchema}
+                                    onSubmit={(values) => console.log(values)}
+                                >
+                                    {({ handleChange, handleBlur, handleSubmit, values, errors, touched }) => (
+                                        <>
+                                            <View style={styles.boxInput}>
+                                                <View>
+                                                    <TextInput
+                                                        style={styles.inputUser}
+                                                        onChangeText={handleChange('name')}
+                                                        onBlur={handleBlur('name')}
+                                                        value={values.name}
+                                                        placeholder="Enter your full name"
+                                                    />
+                                                    {errors.name && touched.name ? (
+                                                        <Text style={{ color: 'red' }}>{errors.name}</Text>
+                                                    ) : null}
+                                                </View>
+                                                <View>
+                                                    <TextInput
+                                                        style={styles.inputUser}
+                                                        onChangeText={handleChange('phone')}
+                                                        onBlur={handleBlur('phone')}
+                                                        value={values.phone}
+                                                        placeholder="Enter phone number"
+                                                        keyboardType="numeric"
+                                                    />
+                                                    {errors.phone && touched.phone ? (
+                                                        <Text style={{ color: 'red' }}>{errors.phone}</Text>
+                                                    ) : null}
+                                                </View>
+                                                <View>
+                                                    <TextInput
+                                                        style={styles.inputUser}
+                                                        onChangeText={handleChange('pass')}
+                                                        onBlur={handleBlur('pass')}
+                                                        value={values.pass}
+                                                        placeholder="Enter Password"
+                                                        secureTextEntry={true}
+                                                    />
+                                                    {errors.pass && touched.pass ? (
+                                                        <Text style={{ color: 'red' }}>{errors.pass}</Text>
+                                                    ) : null}
+                                                </View>
+                                                <View>
+                                                    <TextInput
+                                                        style={styles.inputUser}
+                                                        onChangeText={handleChange('repass')}
+                                                        onBlur={handleBlur('repass')}
+                                                        value={values.repass}
+                                                        placeholder="Comfirm Password"
+                                                        secureTextEntry={true}
+                                                    />
+                                                    {errors.repass && touched.repass ? (
+                                                        <Text style={{ color: 'red' }}>{errors.repass}</Text>
+                                                    ) : null}
+                                                </View>
+                                                <View style={styles.w_BtnRegister}>
+                                                    <TouchableOpacity
+                                                        style={styles.btn_Register}
+                                                        onPress={handleSubmit}
+                                                    >
+                                                        <Text
+                                                            style={{ color: 'white', fontWeight: '600', fontSize: 16 }}
+                                                            onPress={handleSubmit}
+                                                        >
+                                                            Register
+                                                        </Text>
+                                                    </TouchableOpacity>
+                                                </View>
+                                            </View>
+                                        </>
+                                    )}
+                                    ;
+                                </Formik>
                             </View>
                         </ScrollView>
                     </KeyboardAvoidingView>
