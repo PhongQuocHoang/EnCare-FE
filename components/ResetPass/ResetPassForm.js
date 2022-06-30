@@ -15,8 +15,7 @@ import React from 'react';
 
 const IMAGE_BACKGROUND = require('../../assets/image/login_background.png');
 
-const ForgotPassForm = ({ navigation }) => {
-    const [number, onChangeNumber] = React.useState('');
+const ResetPassForm = ({ navigation }) => {
     const [text, onChangeText] = React.useState('');
 
     return (
@@ -25,8 +24,8 @@ const ForgotPassForm = ({ navigation }) => {
                 <SafeAreaView style={styles.container}>
                     {/*  */}
                     <View style={styles.w_Title}>
-                        <Text style={styles.title}>Forgot Password</Text>
-                        <Text>Enter your phone number</Text>
+                        <Text style={styles.title}>Reset Password</Text>
+                        <Text>Enter your new password</Text>
                     </View>
 
                     {/*  */}
@@ -38,32 +37,37 @@ const ForgotPassForm = ({ navigation }) => {
                             <View style={styles.boxInput}>
                                 <TextInput
                                     style={styles.inputUser}
-                                    onChangeText={onChangeNumber}
-                                    value={number}
-                                    placeholder="Phone number"
-                                    keyboardType="numeric"
+                                    onChangeText={onChangeText}
+                                    value={text}
+                                    placeholder="Create new password"
+                                />
+                                <TextInput
+                                    style={styles.inputUser}
+                                    onChangeText={onChangeText}
+                                    value={text}
+                                    placeholder="Confirm your password"
                                 />
                             </View>
                             <View style={styles.w_BtnRegister}>
                                 <TouchableOpacity
                                     style={styles.btn_Register}
-                                    onPress={() => navigation.push('ResetPassScreen')}
+                                    onPress={() => navigation.navigate('LoginScreen')}
                                 >
-                                    <Text style={{ color: 'white', fontWeight: '600', fontSize: 16 }}>Continues</Text>
+                                    <Text style={{ color: 'white', fontWeight: '600', fontSize: 16 }}>Change</Text>
                                 </TouchableOpacity>
                             </View>
                         </View>
                     </KeyboardAvoidingView>
                     {/*  */}
-                    <View style={styles.w_SignIn}>
+                    {/* <View style={styles.w_SignIn}>
                         <View style={styles.alreadyHaveAcc}>
                             <Text>Already have an account?</Text>
 
                             <TouchableOpacity onPress={() => navigation.goBack('LoginScreen')}>
                                 <Text style={{ color: '#50C2C9', fontWeight: '700', fontSize: 14 }}>Sign In</Text>
                             </TouchableOpacity>
-                        </View>
-                    </View>
+                        </View> */}
+                    {/* </View> */}
                 </SafeAreaView>
             </TouchableWithoutFeedback>
         </ImageBackground>
@@ -111,7 +115,7 @@ const styles = StyleSheet.create({
         backgroundColor: 'rgba(106, 224, 217, 0.2)',
     },
     w_BtnRegister: {
-        marginTop: 235,
+        marginTop: 175,
     },
     btn_Register: {
         width: 280,
@@ -129,4 +133,4 @@ const styles = StyleSheet.create({
     },
 });
 
-export default ForgotPassForm;
+export default ResetPassForm;

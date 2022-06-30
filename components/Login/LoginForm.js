@@ -6,6 +6,7 @@ import {
     SafeAreaView,
     ImageBackground,
     Image,
+    Button,
     TextInput,
     TouchableOpacity,
     KeyboardAvoidingView,
@@ -13,14 +14,26 @@ import {
     Platform,
     ScrollView,
 } from 'react-native';
+import callApi from '../../apis/axiosClient';
+import { Formik } from 'formik';
 import React from 'react';
-
+import { validateSchema } from '../validateSchema';
 const IMAGE_BACKGROUND = require('../../assets/image/login_background.png');
 const IMAGE_TITLELOGIN = require('../../assets/image/image_title_login.jpeg');
 
 const LoginForm = ({ navigation }) => {
-    const [number, onChangeNumber] = React.useState('');
-    const [text, onChangeText] = React.useState('');
+    const onLogin = async (phoneNumber, password) => {
+        await callApi('login', 'post', {
+            phone: phoneNumber,
+            password: password,
+        })
+            .then((res) => {
+                console.log(res.data);
+            })
+            .catch((error) => {
+                console.log('thatbai', error);
+            });
+    };
 
     return (
         <ImageBackground style={styles.backgroundImg} source={IMAGE_BACKGROUND}>
@@ -39,37 +52,73 @@ const LoginForm = ({ navigation }) => {
                         style={styles.w_Input}
                     >
                         <ScrollView showsVerticalScrollIndicator={false}>
-                            <View>
-                                <View style={styles.boxInput}>
-                                    <TextInput
-                                        style={styles.inputUser}
-                                        onChangeText={onChangeNumber}
-                                        value={number}
-                                        placeholder="Enter phone number"
-                                        keyboardType="numeric"
-                                    />
-                                    <TextInput
-                                        style={styles.inputUser}
-                                        onChangeText={onChangeText}
-                                        value={text}
-                                        placeholder="Password"
-                                        secureTextEntry={true}
-                                    />
-                                    <View style={styles.forgot_Login}>
-                                        <TouchableOpacity
-                                            style={styles.forgotPass}
-                                            onPress={() => navigation.push('ForgotPassScreen')}
-                                        >
-                                            <Text style={{ color: '#50C2C9', fontSize: 14 }}>Forgot Password</Text>
-                                        </TouchableOpacity>
-                                        <TouchableOpacity style={styles.btn_Login}>
-                                            <Text style={{ color: 'white', fontWeight: '600', fontSize: 16 }}>
-                                                Login
-                                            </Text>
-                                        </TouchableOpacity>
-                                    </View>
-                                </View>
-                            </View>
+                            <Formik
+                                initialValues={{ phone: '', pass: '' }}
+                                // onSubmit={() => {}}
+                                validationSchema={validateSchema}
+                                validateOnMount={true}
+                            >
+                                {({ handleChange, handleBlur, values, errors, touched }) => (
+                                    <>
+                                        <View style={styles.boxInput}>
+                                            <View style={{ alignItems: 'center' }}>
+                                                <TextInput
+                                                    style={styles.inputUser}
+                                                    onBlur={handleBlur('phone')}
+                                                    onChangeText={handleChange('phone')}
+                                                    value={values.phone}
+                                                    placeholder="Enter phone number"
+                                                    keyboardType="numeric"
+                                                />
+                                                {errors.phone && touched.phone ? (
+                                                    <Text
+                                                        style={{
+                                                            color: 'red',
+                                                            fontSize: 12,
+                                                            bottom: 10,
+                                                        }}
+                                                    >
+                                                        {errors.phone}
+                                                    </Text>
+                                                ) : null}
+                                            </View>
+                                            <View style={{ alignItems: 'center' }}>
+                                                <TextInput
+                                                    style={styles.inputUser}
+                                                    onBlur={handleBlur('pass')}
+                                                    onChangeText={handleChange('pass')}
+                                                    value={values.pass}
+                                                    placeholder="Password"
+                                                    secureTextEntry={true}
+                                                />
+                                                {errors.pass && touched.pass ? (
+                                                    <Text style={{ color: 'red', fontSize: 12, bottom: 10 }}>
+                                                        {errors.pass}
+                                                    </Text>
+                                                ) : null}
+                                            </View>
+                                            <View style={styles.forgot_Login}>
+                                                <TouchableOpacity
+                                                    style={styles.forgotPass}
+                                                    onPress={() => navigation.push('ForgotPassScreen')}
+                                                >
+                                                    <Text style={{ color: '#50C2C9', fontSize: 14 }}>
+                                                        Forgot Password
+                                                    </Text>
+                                                </TouchableOpacity>
+                                                <TouchableOpacity
+                                                    style={styles.btn_Login}
+                                                    onPress={() => onLogin(values.phone, values.pass)}
+                                                >
+                                                    <Text style={{ color: 'white', fontWeight: '600', fontSize: 16 }}>
+                                                        Login
+                                                    </Text>
+                                                </TouchableOpacity>
+                                            </View>
+                                        </View>
+                                    </>
+                                )}
+                            </Formik>
                         </ScrollView>
                     </KeyboardAvoidingView>
                     {/*  */}
@@ -124,6 +173,7 @@ const styles = StyleSheet.create({
     },
     boxInput: {
         paddingTop: 50,
+        alignItems: 'center',
     },
     inputUser: {
         width: 280,

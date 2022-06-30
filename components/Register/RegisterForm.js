@@ -13,14 +13,29 @@ import {
     Platform,
     ScrollView,
 } from 'react-native';
-import React from 'react';
 
+import React, { useState } from 'react';
+import callApi from '../../apis/axiosClient';
 const IMAGE_BACKGROUND = require('../../assets/image/login_background.png');
-const IMAGE_TITLELOGIN = require('../../assets/image/image_title_login.jpeg');
 
 const RegisterForm = ({ navigation }) => {
-    const [number, onChangeNumber] = React.useState('');
-    const [text, onChangeText] = React.useState('');
+    const [userName, setUserName] = useState('');
+    const [phoneNumber, setPhoneNumber] = useState('');
+    const [password, setPassword] = useState('');
+    const [cfmpassword, setCfPassword] = useState('');
+
+    const onSignUp = () => {
+        callApi('registerUser', 'post', {
+            phone: phoneNumber,
+            password: password,
+        })
+            .then((res) => {
+                console.log(res.data);
+            })
+            .catch((err) => {
+                console.log(err);
+            });
+    };
 
     return (
         <ImageBackground style={styles.backgroundImg} source={IMAGE_BACKGROUND}>
@@ -42,34 +57,50 @@ const RegisterForm = ({ navigation }) => {
                                 <View style={styles.boxInput}>
                                     <TextInput
                                         style={styles.inputUser}
-                                        onChangeText={onChangeNumber}
-                                        value={text}
+                                        onChangeText={(text) => {
+                                            setUserName(text);
+                                        }}
+                                        value={userName}
+                                        autoCapitalize="none"
+                                        autoCorrect={false}
                                         placeholder="Enter your full name"
                                     />
                                     <TextInput
                                         style={styles.inputUser}
-                                        onChangeText={onChangeNumber}
-                                        value={number}
+                                        onChangeText={(text) => {
+                                            setPhoneNumber(text);
+                                        }}
+                                        value={phoneNumber}
+                                        autoCapitalize="none"
+                                        autoCorrect={false}
                                         placeholder="Enter phone number"
                                         keyboardType="numeric"
                                     />
                                     <TextInput
                                         style={styles.inputUser}
-                                        onChangeText={onChangeText}
-                                        value={text}
+                                        onChangeText={(text) => {
+                                            setPassword(text);
+                                        }}
+                                        value={password}
+                                        autoCapitalize="none"
+                                        autoCorrect={false}
                                         placeholder="Enter Password"
                                         secureTextEntry={true}
                                     />
                                     <TextInput
                                         style={styles.inputUser}
-                                        onChangeText={onChangeText}
-                                        value={text}
+                                        onChangeText={(text) => {
+                                            setCfPassword(text);
+                                        }}
+                                        value={cfmpassword}
+                                        autoCapitalize="none"
+                                        autoCorrect={false}
                                         placeholder="Comfirm Password"
                                         secureTextEntry={true}
                                     />
                                 </View>
                                 <View style={styles.w_BtnRegister}>
-                                    <TouchableOpacity style={styles.btn_Register}>
+                                    <TouchableOpacity style={styles.btn_Register} onPress={onSignUp}>
                                         <Text style={{ color: 'white', fontWeight: '600', fontSize: 16 }}>
                                             Register
                                         </Text>
