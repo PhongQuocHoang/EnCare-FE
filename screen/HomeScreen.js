@@ -1,11 +1,12 @@
 import React from 'react';
-import { Button, SafeAreaView, Text } from 'react-native';
+import { SafeAreaView, Text, Image } from 'react-native';
+import BottomTab from '../components/Home/BottomTabIcon';
 
 const HomeScreen = ({ navigation }) => {
     return (
         <SafeAreaView>
-            <Text>HomeScreen</Text>
-            <Button title="Go to Details" onPress={() => navigation.navigate('LoginScreen')} />
+            <Text>Home</Text>
+            {/* <BottomTab /> */}
         </SafeAreaView>
     );
 };

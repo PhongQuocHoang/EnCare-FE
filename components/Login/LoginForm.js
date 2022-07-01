@@ -6,13 +6,13 @@ import {
     SafeAreaView,
     ImageBackground,
     Image,
-    Button,
     TextInput,
     TouchableOpacity,
     KeyboardAvoidingView,
     TouchableWithoutFeedback,
     Platform,
     ScrollView,
+    Alert,
 } from 'react-native';
 import callApi from '../../apis/axiosClient';
 import { Formik } from 'formik';
@@ -29,37 +29,44 @@ const LoginForm = ({ navigation }) => {
         })
             .then((res) => {
                 console.log(res.data);
+                navigation.push('HomeScreen');
             })
             .catch((error) => {
-                console.log('thatbai', error);
+                Alert.alert('You entered the wrong phone number or password, please check again', error.message, [
+                    {
+                        text: 'Ok',
+                        onPress: () => console.log('Ok'),
+                        style: 'cancel',
+                    },
+                ]);
             });
     };
 
     return (
         <ImageBackground style={styles.backgroundImg} source={IMAGE_BACKGROUND}>
-            <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-                <SafeAreaView style={styles.container}>
-                    {/*  */}
+            <Formik
+                initialValues={{ phone: '', pass: '' }}
+                // onSubmit={() => {}}
+                validationSchema={validateSchema}
+                validateOnMount={true}
+            >
+                {({ handleChange, handleBlur, values, errors }) => (
+                    <>
+                        <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+                            <SafeAreaView style={styles.container}>
+                                {/*  */}
 
-                    <View style={styles.w_Title}>
-                        <Text style={styles.title}>Welcome to EnCare!</Text>
-                        <Image style={styles.logoTitle} source={IMAGE_TITLELOGIN} />
-                    </View>
+                                <View style={styles.w_Title}>
+                                    <Text style={styles.title}>Welcome to EnCare!</Text>
+                                    <Image style={styles.logoTitle} source={IMAGE_TITLELOGIN} />
+                                </View>
 
-                    {/*  */}
-                    <KeyboardAvoidingView
-                        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-                        style={styles.w_Input}
-                    >
-                        <ScrollView showsVerticalScrollIndicator={false}>
-                            <Formik
-                                initialValues={{ phone: '', pass: '' }}
-                                // onSubmit={() => {}}
-                                validationSchema={validateSchema}
-                                validateOnMount={true}
-                            >
-                                {({ handleChange, handleBlur, values, errors, touched }) => (
-                                    <>
+                                {/*  */}
+                                <KeyboardAvoidingView
+                                    behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+                                    style={styles.w_Input}
+                                >
+                                    <ScrollView showsVerticalScrollIndicator={false}>
                                         <View style={styles.boxInput}>
                                             <View style={{ alignItems: 'center' }}>
                                                 <TextInput
@@ -68,9 +75,9 @@ const LoginForm = ({ navigation }) => {
                                                     onChangeText={handleChange('phone')}
                                                     value={values.phone}
                                                     placeholder="Enter phone number"
-                                                    keyboardType="numeric"
+                                                    keyboardType="number-pad"
                                                 />
-                                                {errors.phone && touched.phone ? (
+                                                {errors.phone ? (
                                                     <Text
                                                         style={{
                                                             color: 'red',
@@ -91,49 +98,60 @@ const LoginForm = ({ navigation }) => {
                                                     placeholder="Password"
                                                     secureTextEntry={true}
                                                 />
-                                                {errors.pass && touched.pass ? (
+                                                {errors.pass ? (
                                                     <Text style={{ color: 'red', fontSize: 12, bottom: 10 }}>
                                                         {errors.pass}
                                                     </Text>
                                                 ) : null}
                                             </View>
-                                            <View style={styles.forgot_Login}>
-                                                <TouchableOpacity
-                                                    style={styles.forgotPass}
-                                                    onPress={() => navigation.push('ForgotPassScreen')}
-                                                >
-                                                    <Text style={{ color: '#50C2C9', fontSize: 14 }}>
-                                                        Forgot Password
-                                                    </Text>
-                                                </TouchableOpacity>
-                                                <TouchableOpacity
-                                                    style={styles.btn_Login}
-                                                    onPress={() => onLogin(values.phone, values.pass)}
-                                                >
-                                                    <Text style={{ color: 'white', fontWeight: '600', fontSize: 16 }}>
-                                                        Login
-                                                    </Text>
-                                                </TouchableOpacity>
-                                            </View>
                                         </View>
-                                    </>
-                                )}
-                            </Formik>
-                        </ScrollView>
-                    </KeyboardAvoidingView>
-                    {/*  */}
+                                    </ScrollView>
+                                </KeyboardAvoidingView>
+                                {/*  */}
+                                <View style={styles.forgot_Login}>
+                                    <TouchableOpacity
+                                        style={styles.forgotPass}
+                                        onPress={() => navigation.push('ForgotPassScreen')}
+                                    >
+                                        <Text style={{ color: '#50C2C9', fontSize: 14 }}>Forgot Password</Text>
+                                    </TouchableOpacity>
+                                    <TouchableOpacity
+                                        style={styles.btn_Login}
+                                        onPress={() =>
+                                            values.phone !== '' || values.pass !== ''
+                                                ? onLogin(values.phone, values.pass)
+                                                : Alert.alert(
+                                                      'Please enter your phone number and password',
+                                                      values.message,
+                                                      [
+                                                          {
+                                                              text: 'Ok',
+                                                              onPress: () => console.log('Ok'),
+                                                              style: 'cancel',
+                                                          },
+                                                      ],
+                                                  )
+                                        }
+                                    >
+                                        <Text style={{ color: 'white', fontWeight: '600', fontSize: 16 }}>Login</Text>
+                                    </TouchableOpacity>
+                                </View>
+                                <View style={styles.w_SignUp}>
+                                    <View style={styles.dontAcc}>
+                                        <Text>Don't have an account?</Text>
 
-                    <View style={styles.w_SignUp}>
-                        <View style={styles.dontAcc}>
-                            <Text>Don't have an account?</Text>
-
-                            <TouchableOpacity onPress={() => navigation.push('RegisterScreen')}>
-                                <Text style={{ color: '#50C2C9', fontWeight: '700', fontSize: 14 }}>Sign Up</Text>
-                            </TouchableOpacity>
-                        </View>
-                    </View>
-                </SafeAreaView>
-            </TouchableWithoutFeedback>
+                                        <TouchableOpacity onPress={() => navigation.push('RegisterScreen')}>
+                                            <Text style={{ color: '#50C2C9', fontWeight: '700', fontSize: 14 }}>
+                                                Sign Up
+                                            </Text>
+                                        </TouchableOpacity>
+                                    </View>
+                                </View>
+                            </SafeAreaView>
+                        </TouchableWithoutFeedback>
+                    </>
+                )}
+            </Formik>
         </ImageBackground>
     );
 };
@@ -168,7 +186,7 @@ const styles = StyleSheet.create({
     },
     //
     w_Input: {
-        height: '50%',
+        height: '27%',
         alignItems: 'center',
     },
     boxInput: {
@@ -190,7 +208,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     forgotPass: {
-        marginTop: 30,
+        // marginTop: 30,
         marginBottom: 40,
     },
     btn_Login: {
@@ -202,12 +220,11 @@ const styles = StyleSheet.create({
     },
     //
     w_SignUp: {
-        height: '10%',
+        height: '19%',
         alignItems: 'center',
         justifyContent: 'center',
     },
     dontAcc: {
-        bottom: 30,
         flexDirection: 'row',
     },
 });

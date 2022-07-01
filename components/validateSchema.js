@@ -1,10 +1,9 @@
 import * as Yup from 'yup';
 export const validateSchema = Yup.object().shape({
-    name: Yup.string().min(5, 'Too short').max(50, 'Too long').required('Required'),
-    phone: Yup.string()
-        .required('Required')
-        .max(10, 'Your phone can only have up to 10 digits')
-        .min(10, 'Your phone has at least 10 digits'),
-    pass: Yup.string().required('Required').min(6, 'Your password has at least 6 characters'),
-    repass: Yup.string().min(6).required('Required'),
+    userName: Yup.string()
+        .min(3, 'Your name must have from 5-30 character')
+        .max(30, 'Your name must have from 5-30 character'),
+    phone: Yup.string().max(10, 'Invalid phone number').min(10, 'Invalid phone number'),
+    pass: Yup.string().min(6, 'Your password has at least 6 characters'),
+    cfmpassword: Yup.string().oneOf([Yup.ref('pass'), null], 'Passwords must match'),
 });

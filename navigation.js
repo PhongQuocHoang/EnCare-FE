@@ -16,12 +16,12 @@ const screenOptions = {
 export default function App() {
     return (
         <NavigationContainer>
-            <Stack.Navigator initialRouteName="RegisterScreen" screenOptions={screenOptions}>
-                {/* <Stack.Screen name="HomeScreen" component={HomeScreen} /> */}
-                {/* <Stack.Screen name="LoginScreen" component={LoginScreen} /> */}
+            <Stack.Navigator initialRouteName="LoginScreen" screenOptions={screenOptions}>
+                <Stack.Screen name="HomeScreen" component={HomeScreen} />
+                <Stack.Screen name="LoginScreen" component={LoginScreen} />
                 <Stack.Screen name="RegisterScreen" component={RegisterScreen} />
                 {/* <Stack.Screen name="ForgotPassScreen" component={ForgotPassScreen} /> */}
-                {/* <Stack.Screen name="ResetPassScreen" component={ResetPassScreen} />5 */}
+                {/* <Stack.Screen name="ResetPassScreen" component={ResetPassScreen} />   */}
             </Stack.Navigator>
         </NavigationContainer>
     );
