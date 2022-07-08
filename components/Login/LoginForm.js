@@ -23,7 +23,7 @@ const IMAGE_TITLELOGIN = require('../../assets/image/image_title_login.jpeg');
 
 const LoginForm = ({ navigation }) => {
     const onLogin = async (phoneNumber, password) => {
-        await callApi('login', 'post', {
+        await callApi('user/login', 'post', {
             phone: phoneNumber,
             password: password,
         })
