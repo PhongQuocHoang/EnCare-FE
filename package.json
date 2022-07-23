@@ -13,6 +13,8 @@
     "react-native": "0.68.2",
     "react-native-divider": "^1.0.3",
     "react-native-elements": "^3.4.2",
+    "react-native-router-flux": "^4.3.1",
+    "react-native-select-dropdown": "^2.0.4",
     "react-native-web": "0.17.7",
     "yup": "^0.32.11"
   },

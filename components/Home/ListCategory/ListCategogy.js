@@ -1,16 +1,56 @@
 import { View, Text, SafeAreaView, StyleSheet, TextInput, TouchableOpacity, Image } from 'react-native';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import { getListCategory } from '../../../apis/getApis';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
-const listCategogy = ['clinic 1', 'clinic 2', 'clinic 3', 'clinic 4'];
+const ListCategogy = ({ navigation }) => {
+    const [datas, setDatas] = useState({});
 
-const ListCategogy = ({ list }) => {
+    const _storeData = async (idcat) => {
+        try {
+            await AsyncStorage.setItem('IdCategory', idcat);
+            navigation.push('ListDoctorScreen');
+        } catch (error) {
+            console.log(error);
+        }
+    };
+
+    useEffect(() => {
+        getListCategory(setDatas);
+    }, []);
+
     return (
-        <SafeAreaView style={styles.container}>
-            <Header />
-        </SafeAreaView>
+        <View style={{ backgroundColor: '#fff', flex: 1 }}>
+            <SafeAreaView style={styles.container}>
+                <TouchableOpacity style={styles.back} onPress={() => navigation.goBack('HomeScreen')}>
+                    <Image
+                        source={{ uri: 'https://img.icons8.com/ios-filled/40/000000/back.png' }}
+                        style={styles.backIcon}
+                    />
+                    <Text style={{ fontWeight: '500' }}>Back</Text>
+                </TouchableOpacity>
+                <Header />
+            </SafeAreaView>
+            <View style={{ padding: 10 }}>
+                {datas &&
+                    datas.length > 0 &&
+                    datas.map((e, index) => (
+                        <TouchableOpacity
+                            key={index}
+                            style={styles.w_Item}
+                            onPress={() => _storeData(e.categoryId.toString())}
+                        >
+                            <Text>{e.name}</Text>
+                        </TouchableOpacity>
+                    ))}
+            </View>
+            {/* <TouchableOpacity onPress={() => _retrieveData()}>
+                <Text>test</Text>
+            </TouchableOpacity> */}
+        </View>
     );
 };
-const Header = ({ list }) => {
+const Header = () => {
     return (
         <View style={styles.search}>
             <Text style={styles.text}>Find a category </Text>
@@ -31,6 +71,7 @@ const Header = ({ list }) => {
         </View>
     );
 };
+
 const styles = StyleSheet.create({
     container: {
         backgroundColor: '#6AE0D9',
@@ -70,6 +111,24 @@ const styles = StyleSheet.create({
     iconSearch: {
         height: 27,
         width: 27,
+    },
+    back: {
+        alignItems: 'center',
+        flexDirection: 'row',
+        padding: 10,
+    },
+    backIcon: {
+        height: 20,
+        width: 20,
+    },
+    w_Item: {
+        marginBottom: 10,
+        height: 43,
+        paddingLeft: 10,
+        paddingRight: 10,
+        borderRadius: 8,
+        justifyContent: 'center',
+        backgroundColor: '#F4F3F3',
     },
 });
 

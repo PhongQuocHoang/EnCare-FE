@@ -1,14 +1,14 @@
 import React from 'react';
-import { SafeAreaView, View, Text, StyleSheet } from 'react-native';
-import Header from '../components/Home/HomeDoctor/Header';
-import Content, { Category } from '../components/Home/HomeDoctor/Content';
-import BottomTab, { BottomTabIcon } from '../components/Home/HomeDoctor/BottomTabIcon';
+import { View, StyleSheet } from 'react-native';
+import Header from '../components/Home/HomePatient/Header';
+import Content from '../components/Home/HomePatient/Content';
+import BottomTab, { BottomTabIcon } from '../components/Home/HomePatient/BottomTabIcon';
 
 const HomeScreen = ({ navigation }) => {
     return (
         <View style={styles.container}>
             <Header navigation={navigation} />
-            <Content navigation={Category} />
+            <Content navigation={navigation} />
             <BottomTab icons={BottomTabIcon} />
         </View>
     );

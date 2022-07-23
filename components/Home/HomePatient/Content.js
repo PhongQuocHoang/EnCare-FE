@@ -1,7 +1,10 @@
 import { View, Text, StyleSheet, TextInput, Image, TouchableOpacity, ScrollView } from 'react-native';
 import React from 'react';
+import callApi from '../../../apis/axiosClient';
+import { useState } from 'react';
+import { getListDoctor, getListCategory } from '../../../apis/getApis';
 
-export const Category = [
+const Category = [
     {
         name: 'Heart',
         categoryIcon: 'https://img.icons8.com/pastel_glyph/40/07AEB8/hearts----v2.png',
@@ -20,32 +23,7 @@ export const Category = [
     },
 ];
 
-export const listAppointment = [
-    {
-        avatarDoctor: '',
-        nameDoctor: '',
-        category: '',
-        adress: '',
-        date: '',
-        time: '',
-    },
-    {
-        avatarDoctor: '',
-        nameDoctor: '',
-        category: '',
-        adress: '',
-        date: '',
-        time: '',
-    },
-];
-
 const Content = ({ navigation }) => {
-    const Icon = ({ icon }) => (
-        <TouchableOpacity style={styles.w_icon} onPress={() => navigation.push('ListCategoryScreen')}>
-            <Image source={{ uri: icon.categoryIcon }} style={styles.iconn} />
-        </TouchableOpacity>
-    );
-
     return (
         <ScrollView showsVerticalScrollIndicator={false}>
             <View style={styles.search}>
@@ -76,15 +54,29 @@ const Content = ({ navigation }) => {
                 </View>
                 <View style={styles.category}>
                     <Text style={{ fontSize: 17, fontWeight: '600' }}>Category</Text>
+
                     <View style={styles.w_category}>
-                        {navigation.map((icon, index) => (
-                            <Icon key={index} icon={icon} />
+                        {Category.map((icon, index) => (
+                            <TouchableOpacity
+                                key={index}
+                                style={styles.w_icon}
+                                onPress={() =>
+                                    // (icon.categoryId === 1 ? navigation.navigate('ListDoctorScreen') : null)
+
+                                    icon === 'More'
+                                        ? navigation.push('ListDoctorScreen')
+                                        : navigation.push('ListCategoryScreen')
+                                }
+                            >
+                                <Image source={{ uri: icon.categoryIcon }} style={styles.iconn} />
+                            </TouchableOpacity>
                         ))}
                     </View>
                 </View>
-                <View style={{ height: 'auto' }}>
+                <View style={{ maxHeight: 250 }}>
                     <Text style={{ fontSize: 17, fontWeight: '600' }}>Upcomming Appointment</Text>
                     <ScrollView showsVerticalScrollIndicator={false}>
+                        {/* Call api lịch khám và để một cái banner nếu ko có lịch */}
                         <View style={styles.viewAppointment}>
                             <Image
                                 style={styles.avatarD}
@@ -94,7 +86,7 @@ const Content = ({ navigation }) => {
                             />
                             <View style={styles.inforApppointment}>
                                 <View style={{ flex: 0.65 }}>
-                                    <Text style={{ fontSize: 13 }}>Dr. Hoang Quoc Phong</Text>
+                                    <Text style={{ fontSize: 13, fontWeight: '600' }}>Dr. Hoang Quoc Phong</Text>
                                     <Text style={{ fontSize: 13 }}>Bác sĩ Tim mạch</Text>
                                     <Text style={{ fontSize: 12, flexWrap: 'wrap' }}>
                                         124 Hải Phòng, Thạch Thang, Hải Châu, Đà Nẵng
@@ -107,61 +99,7 @@ const Content = ({ navigation }) => {
                                             uri: 'https://img.icons8.com/fluency-systems-regular/40/6AE0D9/planner.png',
                                         }}
                                     />
-                                    <Text>24/04/2001</Text>
-                                    <Text style={{ fontSize: 15, fontWeight: '600' }}>10:00 AM</Text>
-                                </View>
-                            </View>
-                        </View>
-                        <View style={styles.viewAppointment}>
-                            <Image
-                                style={styles.avatarD}
-                                source={{
-                                    uri: 'https://www.meme-arsenal.com/memes/3e2b481b680239a88fcb3ff4e3744f51.jpg',
-                                }}
-                            />
-                            <View style={styles.inforApppointment}>
-                                <View style={{ flex: 0.65 }}>
-                                    <Text style={{ fontSize: 13 }}>Dr. Hoang Quoc Phong</Text>
-                                    <Text style={{ fontSize: 13 }}>Bác sĩ Tim mạch</Text>
-                                    <Text style={{ fontSize: 12, flexWrap: 'wrap' }}>
-                                        124 Hải Phòng, Thạch Thang, Hải Châu, Đà Nẵng
-                                    </Text>
-                                </View>
-                                <View style={{ flex: 0.35, alignItems: 'flex-end' }}>
-                                    <Image
-                                        style={{ height: 20, width: 20 }}
-                                        source={{
-                                            uri: 'https://img.icons8.com/fluency-systems-regular/40/6AE0D9/planner.png',
-                                        }}
-                                    />
-                                    <Text>24/04/2001</Text>
-                                    <Text style={{ fontSize: 15, fontWeight: '600' }}>10:00 AM</Text>
-                                </View>
-                            </View>
-                        </View>
-                        <View style={styles.viewAppointment}>
-                            <Image
-                                style={styles.avatarD}
-                                source={{
-                                    uri: 'https://www.meme-arsenal.com/memes/3e2b481b680239a88fcb3ff4e3744f51.jpg',
-                                }}
-                            />
-                            <View style={styles.inforApppointment}>
-                                <View style={{ flex: 0.65 }}>
-                                    <Text style={{ fontSize: 13 }}>Dr. Hoang Quoc Phong</Text>
-                                    <Text style={{ fontSize: 13 }}>Bác sĩ Tim mạch</Text>
-                                    <Text style={{ fontSize: 12, flexWrap: 'wrap' }}>
-                                        124 Hải Phòng, Thạch Thang, Hải Châu, Đà Nẵng
-                                    </Text>
-                                </View>
-                                <View style={{ flex: 0.35, alignItems: 'flex-end' }}>
-                                    <Image
-                                        style={{ height: 20, width: 20 }}
-                                        source={{
-                                            uri: 'https://img.icons8.com/fluency-systems-regular/40/6AE0D9/planner.png',
-                                        }}
-                                    />
-                                    <Text>24/04/2001</Text>
+                                    <Text>20/07/2022</Text>
                                     <Text style={{ fontSize: 15, fontWeight: '600' }}>10:00 AM</Text>
                                 </View>
                             </View>
@@ -172,6 +110,7 @@ const Content = ({ navigation }) => {
                     <Text style={{ fontSize: 17, fontWeight: '600' }}>Favourite Dotor</Text>
                     <View style={{ flexDirection: 'row' }}>
                         <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
+                            {/* call api danh sách bác sĩ ưu thích or tự tạo */}
                             <View
                                 style={{
                                     padding: 10,
@@ -187,7 +126,7 @@ const Content = ({ navigation }) => {
                                         uri: 'https://www.meme-arsenal.com/memes/3e2b481b680239a88fcb3ff4e3744f51.jpg',
                                     }}
                                 />
-                                <Text>Dr. Tonny Stack</Text>
+                                <Text style={{ fontWeight: '500' }}>Dr. Tonny Stack</Text>
                                 <Text>Da Nang, Viet Nam</Text>
                             </View>
                             <View
@@ -205,7 +144,7 @@ const Content = ({ navigation }) => {
                                         uri: 'https://www.meme-arsenal.com/memes/3e2b481b680239a88fcb3ff4e3744f51.jpg',
                                     }}
                                 />
-                                <Text>Dr. Tonny Stack</Text>
+                                <Text style={{ fontWeight: '500' }}>Dr. Tonny Stack</Text>
                                 <Text>Da Nang, Viet Nam</Text>
                             </View>
                             <View
@@ -223,25 +162,7 @@ const Content = ({ navigation }) => {
                                         uri: 'https://www.meme-arsenal.com/memes/3e2b481b680239a88fcb3ff4e3744f51.jpg',
                                     }}
                                 />
-                                <Text>Dr. Tonny Stack</Text>
-                                <Text>Da Nang, Viet Nam</Text>
-                            </View>
-                            <View
-                                style={{
-                                    padding: 10,
-                                    backgroundColor: '#F4F3F3',
-                                    marginRight: 10,
-                                    borderRadius: 8,
-                                    alignItems: 'center',
-                                }}
-                            >
-                                <Image
-                                    style={styles.avatarFD}
-                                    source={{
-                                        uri: 'https://www.meme-arsenal.com/memes/3e2b481b680239a88fcb3ff4e3744f51.jpg',
-                                    }}
-                                />
-                                <Text>Dr. Tonny Stack</Text>
+                                <Text style={{ fontWeight: '500' }}>Dr. Tonny Stack</Text>
                                 <Text>Da Nang, Viet Nam</Text>
                             </View>
                         </ScrollView>

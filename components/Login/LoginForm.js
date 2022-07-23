@@ -18,24 +18,24 @@ import callApi from '../../apis/axiosClient';
 import { Formik } from 'formik';
 import React from 'react';
 import { validateSchema } from '../validateSchema';
+import { getDatas } from '../../apis/getApis';
 const IMAGE_BACKGROUND = require('../../assets/image/login_background.png');
 const IMAGE_TITLELOGIN = require('../../assets/image/image_title_login.jpeg');
 
 const LoginForm = ({ navigation }) => {
-    const onLogin = async (phoneNumber, password) => {
-        await callApi('user/login', 'post', {
+    const onLogin = (phoneNumber, password) => {
+        callApi('user/login', 'post', {
             phone: phoneNumber,
             password: password,
         })
             .then((res) => {
-                console.log(res.data);
+                console.log(res.data.data);
                 navigation.push('HomeScreen');
             })
             .catch((error) => {
-                Alert.alert('You entered the wrong phone number or password, please check again', error.message, [
+                Alert.alert('You entered the wrong phone number or password, please check again', console.log(error), [
                     {
                         text: 'Ok',
-                        onPress: () => console.log('Ok'),
                         style: 'cancel',
                     },
                 ]);
@@ -44,12 +44,7 @@ const LoginForm = ({ navigation }) => {
 
     return (
         <ImageBackground style={styles.backgroundImg} source={IMAGE_BACKGROUND}>
-            <Formik
-                initialValues={{ phone: '', pass: '' }}
-                // onSubmit={() => {}}
-                validationSchema={validateSchema}
-                validateOnMount={true}
-            >
+            <Formik initialValues={{ phone: '', pass: '' }} validationSchema={validateSchema} validateOnMount={true}>
                 {({ handleChange, handleBlur, values, errors }) => (
                     <>
                         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
