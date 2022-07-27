@@ -1,7 +1,6 @@
 import { View, Text, StyleSheet, TextInput, Image, TouchableOpacity, ScrollView } from 'react-native';
-import React from 'react';
+import React, { useState } from 'react';
 import callApi from '../../../apis/axiosClient';
-import { useState } from 'react';
 import { getListDoctor, getListCategory } from '../../../apis/getApis';
 
 const Category = [
@@ -24,6 +23,8 @@ const Category = [
 ];
 
 const Content = ({ navigation }) => {
+    const [datas, setDatas] = useState([]);
+
     return (
         <ScrollView showsVerticalScrollIndicator={false}>
             <View style={styles.search}>
@@ -74,7 +75,9 @@ const Content = ({ navigation }) => {
                     </View>
                 </View>
                 <View style={{ maxHeight: 250 }}>
-                    <Text style={{ fontSize: 17, fontWeight: '600' }}>Upcomming Appointment</Text>
+                    <TouchableOpacity onPress={() => navigation.push('BookingScreen')}>
+                        <Text style={{ fontSize: 17, fontWeight: '600' }}>Upcomming Appointment</Text>
+                    </TouchableOpacity>
                     <ScrollView showsVerticalScrollIndicator={false}>
                         {/* Call api lịch khám và để một cái banner nếu ko có lịch */}
                         <View style={styles.viewAppointment}>

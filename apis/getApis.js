@@ -1,21 +1,7 @@
 import callApi from './axiosClient';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-
-const link = 'user/listDoctor?categoryId=1&lon=0&lat=0&page=0&rating=0';
-
-const _retrieveData = async () => {
-    try {
-        const value = await AsyncStorage.getItem('IdCategory');
-        if (value !== null) {
-            console.log(value);
-        }
-    } catch (error) {
-        console.log(error);
-    }
-};
 
 export const getListCategory = (setDatasCategory) => {
-    callApi('user/listCategory', 'get')
+    callApi('api/user/listCategory', 'get')
         .then((res) => {
             setDatasCategory(res.data.data);
         })
@@ -24,10 +10,12 @@ export const getListCategory = (setDatasCategory) => {
         });
 };
 
-export const getListDoctor = (setDatasDoctor) => {
+export const getListDoctor = (setDatasDoctor, id) => {
+    const link = `api/user/listDoctor?categoryId=${id}&lon=0&lat=0&page=0&rating=0`;
     callApi(link, 'get')
         .then((res) => {
             setDatasDoctor(res.data.data);
+            // console.log(res.data.data);
         })
         .catch((e) => {
             console.log(e);
@@ -35,9 +23,21 @@ export const getListDoctor = (setDatasDoctor) => {
 };
 
 export const getProfile = (setDatas) => {
-    callApi('patient/myProfile', 'get')
+    callApi('api/patient/myProfile', 'get')
         .then((res) => {
             setDatas(res.data.data);
+        })
+        .catch((e) => {
+            console.log(e);
+        });
+};
+
+export const getDoctorId = (setDatas, id) => {
+    const link = `find/doctor/${id}`;
+    callApi(link, 'get')
+        .then((res) => {
+            setDatas(res.data.data);
+            // console.log(res.data.data);
         })
         .catch((e) => {
             console.log(e);

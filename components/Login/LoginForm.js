@@ -16,15 +16,18 @@ import {
 } from 'react-native';
 import callApi from '../../apis/axiosClient';
 import { Formik } from 'formik';
-import React from 'react';
+import React, { useState } from 'react';
 import { validateSchema } from '../validateSchema';
+import { Ionicons } from '@expo/vector-icons';
 import { getDatas } from '../../apis/getApis';
 const IMAGE_BACKGROUND = require('../../assets/image/login_background.png');
 const IMAGE_TITLELOGIN = require('../../assets/image/image_title_login.jpeg');
 
 const LoginForm = ({ navigation }) => {
+    const [isSecureEntry, setIsSecureEntry] = useState(true);
+
     const onLogin = (phoneNumber, password) => {
-        callApi('user/login', 'post', {
+        callApi('api/user/login', 'post', {
             phone: phoneNumber,
             password: password,
         })
@@ -85,14 +88,38 @@ const LoginForm = ({ navigation }) => {
                                                 ) : null}
                                             </View>
                                             <View style={{ alignItems: 'center' }}>
-                                                <TextInput
-                                                    style={styles.inputUser}
-                                                    onBlur={handleBlur('pass')}
-                                                    onChangeText={handleChange('pass')}
-                                                    value={values.pass}
-                                                    placeholder="Password"
-                                                    secureTextEntry={true}
-                                                />
+                                                <View style={{ flexDirection: 'row' }}>
+                                                    <TextInput
+                                                        style={styles.inputUser}
+                                                        onBlur={handleBlur('pass')}
+                                                        onChangeText={handleChange('pass')}
+                                                        value={values.pass}
+                                                        placeholder="Password"
+                                                        secureTextEntry={isSecureEntry}
+                                                    />
+
+                                                    <View
+                                                        style={{
+                                                            position: 'absolute',
+                                                            right: 0,
+                                                            top: 5,
+                                                            padding: 10,
+                                                        }}
+                                                    >
+                                                        <TouchableOpacity
+                                                            onPress={() => {
+                                                                setIsSecureEntry((prev) => !prev);
+                                                            }}
+                                                        >
+                                                            {isSecureEntry ? (
+                                                                <Ionicons name="eye-outline" size={20}></Ionicons>
+                                                            ) : (
+                                                                <Ionicons name="eye-off-outline" size={20}></Ionicons>
+                                                            )}
+                                                        </TouchableOpacity>
+                                                    </View>
+                                                </View>
+
                                                 {errors.pass ? (
                                                     <Text style={{ color: 'red', fontSize: 12, bottom: 10 }}>
                                                         {errors.pass}

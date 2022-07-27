@@ -1,9 +1,21 @@
 import { View, Text, Image, TouchableOpacity, StyleSheet, SafeAreaView } from 'react-native';
-import React, { useState } from 'react';
-import callApi from '../../../apis/axiosClient';
-import { getListDoctor } from '../../../apis/getApis';
+import React, { useEffect, useState } from 'react';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { getDoctorId } from '../../../apis/getApis';
 
 const InforDoctor = ({ navigation }) => {
+    const [datas, setDatas] = useState([]);
+    const [idDoc, setIdDoc] = useState('');
+
+    useEffect(() => {
+        AsyncStorage.getItem('IdDoctor').then((result) => {
+            setIdDoc(result);
+        });
+
+        getDoctorId(setDatas, idDoc);
+        console.log(datas);
+    }, [idDoc]);
+
     return (
         <View style={{ backgroundColor: '#fff', flex: 1 }}>
             <SafeAreaView style={{ margin: 20 }}>
@@ -24,7 +36,7 @@ const InforDoctor = ({ navigation }) => {
                     />
                 </View>
                 <View style={{ paddingTop: 20 }}>
-                    <Text style={{ fontWeight: '600', fontSize: 16 }}>Dr.Strange</Text>
+                    <Text style={{ fontWeight: '600', fontSize: 16 }}>Dr. {datas?.accountResponse?.name}</Text>
                     <View
                         style={{
                             paddingBottom: 10,
@@ -33,7 +45,7 @@ const InforDoctor = ({ navigation }) => {
                             justifyContent: 'space-between',
                         }}
                     >
-                        <Text>Anesthesia - pain treatment</Text>
+                        <Text>{datas?.categoryResponse?.name}</Text>
                         <Text>12/01/1978</Text>
                     </View>
                     <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
@@ -44,7 +56,7 @@ const InforDoctor = ({ navigation }) => {
                                     style={styles.iconInfo}
                                     source={{ uri: 'https://img.icons8.com/ios11/40/07AEB8/hospital-3.png' }}
                                 />
-                                <Text style={{ paddingLeft: 5, fontSize: 8 }}>Vinmec Da Nang</Text>
+                                <Text style={{ paddingLeft: 5, fontSize: 8 }}>{datas?.hospitalResponse?.name}</Text>
                             </View>
                         </View>
                         <View style={styles.w_info}>
@@ -64,7 +76,7 @@ const InforDoctor = ({ navigation }) => {
                                     style={styles.iconInfo}
                                     source={{ uri: 'https://img.icons8.com/ios11/40/07AEB8/star.png' }}
                                 />
-                                <Text style={{ paddingLeft: 5, fontSize: 8 }}>4 rating</Text>
+                                <Text style={{ paddingLeft: 5, fontSize: 8 }}>{datas?.rating} rating</Text>
                             </View>
                         </View>
                     </View>
@@ -72,17 +84,13 @@ const InforDoctor = ({ navigation }) => {
                         <Text style={{ paddingBottom: 10, paddingTop: 10, fontWeight: '600', fontSize: 14 }}>
                             Discription
                         </Text>
-                        <Text style={{ fontSize: 12 }}>
-                            Anesthesiology is a medical specialty that plays an extremely important role in surgical
-                            hospitals. Anesthesia duties are indispensable in surgical procedures, as well as other
-                            procedures in the laparoscopic and obstetric departments. The Department of An
-                        </Text>
+                        <Text style={{ fontSize: 12 }}>{datas?.categoryResponse?.description}</Text>
                     </View>
                     <View>
                         <Text style={{ paddingBottom: 5, paddingTop: 10, fontWeight: '600', fontSize: 14 }}>
                             Location
                         </Text>
-                        <Text style={{ fontSize: 12 }}>Da Nang Hospital</Text>
+                        <Text style={{ fontSize: 12 }}>{datas?.hospitalResponse?.address}</Text>
                     </View>
                 </View>
                 <TouchableOpacity style={styles.btn_book} onPress={() => navigation.push('BookingScreen')}>

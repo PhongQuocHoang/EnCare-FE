@@ -20,15 +20,15 @@ const screenOptions = {
 export default function App() {
     return (
         <NavigationContainer>
-            <Stack.Navigator initialRouteName="BookingScreen " screenOptions={screenOptions}>
-                <Stack.Screen name="LoginScreen" component={LoginScreen} />
-                <Stack.Screen name="HomeScreen" component={HomeScreen} />
-                <Stack.Screen name="RegisterScreen" component={RegisterScreen} />
-                <Stack.Screen name="ForgotPassScreen" component={ForgotPassScreen} />
-                <Stack.Screen name="ResetPassScreen" component={ResetPassScreen} />
-                <Stack.Screen name="ListCategoryScreen" component={ListCategoryScreen} />
-                <Stack.Screen name="ListDoctorScreen" component={ListDoctorScreen} />
-                <Stack.Screen name="InforDoctorScreen" component={InforDoctorScreen} />
+            <Stack.Navigator initialRouteName="LoginScreen " screenOptions={screenOptions}>
+                {/* <Stack.Screen name="LoginScreen" component={LoginScreen} /> */}
+                {/* <Stack.Screen name="HomeScreen" component={HomeScreen} /> */}
+                {/* <Stack.Screen name="RegisterScreen" component={RegisterScreen} /> */}
+                {/* <Stack.Screen name="ForgotPassScreen" component={ForgotPassScreen} /> */}
+                {/* <Stack.Screen name="ResetPassScreen" component={ResetPassScreen} /> */}
+                {/* <Stack.Screen name="ListCategoryScreen" component={ListCategoryScreen} /> */}
+                {/* <Stack.Screen name="ListDoctorScreen" component={ListDoctorScreen} /> */}
+                {/* <Stack.Screen name="InforDoctorScreen" component={InforDoctorScreen} /> */}
                 <Stack.Screen name="BookingScreen" component={BookingScreen} />
                 <Stack.Screen name="ConfirmScreen" component={ConfirmScreen} />
             </Stack.Navigator>

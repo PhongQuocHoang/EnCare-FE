@@ -30,7 +30,7 @@ const BottomTab = ({ icons }) => {
 
     const Icon = ({ icon }) => (
         <TouchableOpacity onPress={() => setActiveTab(icon.name)}>
-            <Image source={{ uri: icon.inactive }} style={styles.iconn} />
+            <Image source={{ uri: activeTab === icon.name ? icon.active : icon.inactive }} style={styles.iconn} />
         </TouchableOpacity>
     );
     return (
@@ -62,11 +62,9 @@ const styles = StyleSheet.create({
         width: 35,
         height: 35,
     },
-    // profileTab: (activeTab = '') => ({
-    //     borderRadius: 50,
-    //     borderWidth: activeTab === 'Profile' ? 2 : 0,
-    //     borderColor: '#FF8501',
-    // }),
+    profileTab: (activeTab = '') => ({
+        borderRadius: 50,
+    }),
 });
 
 export default BottomTab;

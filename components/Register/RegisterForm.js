@@ -23,7 +23,7 @@ const IMAGE_BACKGROUND = require('../../assets/image/login_background.png');
 
 const RegisterForm = ({ navigation }) => {
     const onSignUp = async (userName, phone, pass, cfmpassword) => {
-        await callApi('user/registerUser', 'post', {
+        await callApi('api/user/registerUser', 'post', {
             phone: phone,
             password: pass,
             name: userName,

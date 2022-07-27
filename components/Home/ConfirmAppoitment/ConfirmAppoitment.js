@@ -2,7 +2,7 @@ import { View, Text, StyleSheet, Image, TouchableOpacity, ScrollView } from 'rea
 import { Ionicons } from '@expo/vector-icons';
 import React, { useState } from 'react';
 
-const IMAGE_TITLELOGIN = require('/Users/phongoliver/WorkSpace/Intern-Enclave/encare/assets/image/image_title_login.jpeg');
+const IMAGE_TITLELOGIN = require('../../../assets/image/image_title_login.jpeg');
 const ConfirmAppoitment = ({ navigation }) => {
     return (
         <ScrollView style={{ backgroundColor: 'white' }}>

@@ -1,54 +1,73 @@
-import { View, Text, StyleSheet, SafeAreaView, Image, TextInput, TouchableOpacity, ScrollView } from 'react-native';
+import {
+    View,
+    Text,
+    StyleSheet,
+    SafeAreaView,
+    Image,
+    TextInput,
+    TouchableOpacity,
+    ScrollView,
+    Animated,
+    Platform,
+} from 'react-native';
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Ionicons } from '@expo/vector-icons';
 import SelectDropdown from 'react-native-select-dropdown';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { getDoctorId } from '../../../apis/getApis';
+import DatePicker from 'react-native-date-picker';
+// import DateTimePicker from '@react-native-community/datetimepicker';
+// import RNDateTimePicker from '@react-native-community/datetimepicker';
 
-const days = [
-    '1',
-    '2',
-    '3',
-    '4',
-    '5',
-    '6',
-    '7',
-    '8',
-    '9',
-    '10',
-    '11',
-    '12',
-    '13',
-    '14',
-    '15',
-    '16',
-    '17',
-    '18',
-    '19',
-    '20',
-    '21',
-    '22',
-    '23',
-    '24',
-    '25',
-    '26',
-    '27',
-    '28',
-    '29',
-    '30',
-    '31',
-];
-const months = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12'];
-const years = ['2022', '2023', '2024', '2025', '2026', '2027', '2028', '2029', '2030', '2031', '2032'];
-const times = ['8:00', '9:00', '10:00', '11:00', '13:00', '14:00', '15:00', '16:00', '17:00'];
 const BookingInformation = ({ navigation }) => {
     const [symptom, setSymptom] = useState('');
+
+    const [datas, setDatas] = useState([]);
+    const [namePaitent, setNamePatient] = useState('');
+    const [idDoc, setIdDoc] = useState('');
+
+    const [date, setDate] = useState(new Date());
+    const [datePicker, setDatePicker] = useState(false);
+    const [time, setTime] = useState(new Date(Date.now()));
+    const [TimePicker, setTimePicker] = useState(false);
+
+    const [open, setOpen] = useState(false);
+
+    const showDatePicker = () => {
+        setDatePicker(true);
+    };
+    const showDatePicker2 = () => {
+        setDatePicker(false);
+    };
+    const showTimePicker = () => {
+        setTimePicker(true);
+    };
+    const onDateSelected = (event, value) => {
+        setDate(value);
+        setDatePicker(true);
+    };
+    const onTimeSelected = (event, value) => {
+        setTime(value);
+        setTimePicker(true);
+    };
+
+    useEffect(() => {
+        AsyncStorage.getItem('IdDoctor').then((result) => {
+            setIdDoc(result);
+        });
+        AsyncStorage.getItem('NamePatient').then((result) => {
+            setNamePatient(result);
+        });
+        getDoctorId(setDatas, idDoc);
+    }, [idDoc]);
     return (
         <View style={{ flex: 1, backgroundColor: 'white' }}>
             <SafeAreaView style={{ height: 150, backgroundColor: '#6AE0D9' }}>
                 <View style={{ flexDirection: 'row', marginLeft: 15 }}>
                     <TouchableOpacity
                         style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}
-                        onPress={() => navigation.goBack('InforDoctorScreen')}
+                        onPress={() => navigation.goBack('HomeScreen')}
                     >
                         <Ionicons name="chevron-back-outline" color="#121212" size={30}></Ionicons>
                         <Text>Back</Text>
@@ -72,11 +91,11 @@ const BookingInformation = ({ navigation }) => {
                     >
                         <Image
                             source={{ uri: 'https://www.meme-arsenal.com/memes/3e2b481b680239a88fcb3ff4e3744f51.jpg' }}
-                            style={{ height: 60, width: 60, borderRadius: 90, left: 16 }}
+                            style={{ height: 60, width: 60, borderRadius: 90, left: 5 }}
                         ></Image>
-                        <View style={{ height: 80, left: 38, justifyContent: 'center' }}>
+                        <View style={{ height: 80, left: 28, justifyContent: 'center' }}>
                             <Text style={{ padding: 10 }}>Patient</Text>
-                            <Text style={{ paddingLeft: 10, fontWeight: '700' }}>NGUYEN THANH DUONG</Text>
+                            <Text style={{ paddingLeft: 10, fontWeight: '700' }}>{namePaitent}</Text>
                         </View>
                     </View>
                     <View
@@ -93,7 +112,9 @@ const BookingInformation = ({ navigation }) => {
                         </View>
                         <View style={{ height: 80, left: 48, justifyContent: 'center' }}>
                             <Text style={{ padding: 10 }}>Doctor</Text>
-                            <Text style={{ marginLeft: 10, fontWeight: '700' }}>Dr. Nguyen Minh Chau</Text>
+                            <Text style={{ marginLeft: 10, fontWeight: '700' }}>
+                                Dr. {datas?.accountResponse?.name}
+                            </Text>
                         </View>
                     </View>
                     <View
@@ -110,7 +131,7 @@ const BookingInformation = ({ navigation }) => {
                         </View>
                         <View style={{ height: 80, left: 48, justifyContent: 'center' }}>
                             <Text style={{ padding: 10 }}>Hospital/Clinic</Text>
-                            <Text style={{ marginLeft: 10, fontWeight: '700' }}>Phòng khám Vinmec Đà Nẵng</Text>
+                            <Text style={{ marginLeft: 10, fontWeight: '700' }}>{datas?.hospitalResponse?.name}</Text>
                         </View>
                     </View>
                     <View
@@ -125,7 +146,7 @@ const BookingInformation = ({ navigation }) => {
                         <View style={{ left: 16 }}>
                             <Ionicons name="receipt-outline" size={35} color="#00C7C7"></Ionicons>
                         </View>
-                        <View style={{ height: 80, left: 48, justifyContent: 'center' }}>
+                        <View style={{ height: 80, left: 54, justifyContent: 'center' }}>
                             <Text style={{ padding: 10 }}>Service</Text>
                             <Text style={{ marginLeft: 10, fontWeight: '700' }}>Hello hello</Text>
                         </View>
@@ -140,115 +161,19 @@ const BookingInformation = ({ navigation }) => {
                         }}
                     >
                         <Text style={{ paddingBottom: 5 }}>Choose Datetime</Text>
-                        <View style={{ flexDirection: 'row', justifyContent: 'space-around', paddingBottom: 10 }}>
-                            <View>
-                                <Text>Day</Text>
-                                <SelectDropdown
-                                    buttonStyle={styles.inputUser1}
-                                    defaultButtonText="1"
-                                    data={days}
-                                    dropdownStyle={styles.dropDownStyle}
-                                    // selectedRowStyle={styles.selectedText}
-                                    onSelect={(selectedItem, index) => {
-                                        console.log(selectedItem, index);
-                                    }}
-                                    buttonTextAfterSelection={(selectedItem, index) => {
-                                        return selectedItem;
-                                    }}
-                                    rowTextForSelection={(item, index) => {
-                                        return item;
-                                    }}
-                                />
-                            </View>
-                            <View>
-                                <Text>Month</Text>
-                                <SelectDropdown
-                                    buttonStyle={styles.inputUser1}
-                                    defaultButtonText="1"
-                                    data={months}
-                                    dropdownStyle={styles.dropDownStyle}
-                                    // selectedRowStyle={styles.selectedText}
-                                    onSelect={(selectedItem, index) => {
-                                        console.log(selectedItem, index);
-                                    }}
-                                    buttonTextAfterSelection={(selectedItem, index) => {
-                                        return selectedItem;
-                                    }}
-                                    rowTextForSelection={(item, index) => {
-                                        return item;
-                                    }}
-                                />
-                            </View>
-                            <View>
-                                <Text>Year</Text>
-                                <SelectDropdown
-                                    buttonStyle={styles.inputUser1}
-                                    defaultButtonText="2022"
-                                    data={years}
-                                    dropdownStyle={styles.dropDownStyle}
-                                    // selectedRowStyle={styles.selectedText}
-                                    onSelect={(selectedItem, index) => {
-                                        console.log(selectedItem, index);
-                                    }}
-                                    buttonTextAfterSelection={(selectedItem, index) => {
-                                        return selectedItem;
-                                    }}
-                                    rowTextForSelection={(item, index) => {
-                                        return item;
-                                    }}
-                                />
-                            </View>
+
+                        <View style={{ alignItems: 'center', paddingBottom: 10 }}>
+                            {/* ngay book lich */}
+                            <Text>Select Date</Text>
+                            <DatePicker modal date={date} mode="date" open={open} />
+                            <TouchableOpacity onPress={() => setOpen(true)}>
+                                <Text>Test</Text>
+                            </TouchableOpacity>
                         </View>
                         <View>
                             <Text style={{ marginLeft: 15 }}>Time</Text>
                             <View style={{ width: '100%', flexDirection: 'row', justifyContent: 'space-around' }}>
-                                <SelectDropdown
-                                    buttonStyle={styles.inputUser1}
-                                    defaultButtonText="8:00"
-                                    data={times}
-                                    dropdownStyle={styles.dropDownStyle}
-                                    // selectedRowStyle={styles.selectedText}
-                                    onSelect={(selectedItem, index) => {
-                                        console.log(selectedItem, index);
-                                    }}
-                                    buttonTextAfterSelection={(selectedItem, index) => {
-                                        return selectedItem;
-                                    }}
-                                    rowTextForSelection={(item, index) => {
-                                        return item;
-                                    }}
-                                />
-                                <SelectDropdown
-                                    buttonStyle={styles.inputUser1}
-                                    defaultButtonText="9:00"
-                                    data={times}
-                                    dropdownStyle={styles.dropDownStyle}
-                                    // selectedRowStyle={styles.selectedText}
-                                    onSelect={(selectedItem, index) => {
-                                        console.log(selectedItem, index);
-                                    }}
-                                    buttonTextAfterSelection={(selectedItem, index) => {
-                                        return selectedItem;
-                                    }}
-                                    rowTextForSelection={(item, index) => {
-                                        return item;
-                                    }}
-                                />
-                                <SelectDropdown
-                                    buttonStyle={styles.inputUser1}
-                                    defaultButtonText="10:00"
-                                    data={times}
-                                    // selectedRowStyle={styles.selectedText}
-                                    onSelect={(selectedItem, index) => {
-                                        console.log(selectedItem, index);
-                                    }}
-                                    buttonTextAfterSelection={(selectedItem, index) => {
-                                        return selectedItem;
-                                    }}
-                                    rowTextForSelection={(item, index) => {
-                                        return item;
-                                    }}
-                                />
+                                {/* thoi gian book lich */}
                             </View>
                         </View>
                     </View>

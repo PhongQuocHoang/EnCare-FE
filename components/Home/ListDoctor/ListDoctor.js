@@ -1,7 +1,7 @@
 import { View, Text, SafeAreaView, StyleSheet, TextInput, TouchableOpacity, Image, ScrollView } from 'react-native';
 import React, { useEffect, useState } from 'react';
-import callApi from '../../../apis/axiosClient';
 import { getListDoctor } from '../../../apis/getApis';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const ListDoctor = ({ navigation }) => {
     return (
@@ -46,11 +46,24 @@ const Header = () => {
 
 const ListItem = ({ props }) => {
     const [datas, setDatas] = useState([]);
+    const [idCat, setIdCat] = useState('');
+
+    const _storeData = async (IdDoctor) => {
+        try {
+            await AsyncStorage.setItem('IdDoctor', IdDoctor);
+            props.push('InforDoctorScreen');
+        } catch (error) {
+            console.log(error);
+        }
+    };
 
     useEffect(() => {
-        getListDoctor(setDatas);
-    }, []);
-    console.log(datas);
+        AsyncStorage.getItem('IdCategory').then((result) => {
+            setIdCat(result);
+            getListDoctor(setDatas, idCat);
+        });
+    }, [idCat]);
+
     return (
         <View>
             {datas &&
@@ -77,7 +90,7 @@ const ListItem = ({ props }) => {
                                 <View style={{ flex: 0.35, justifyContent: 'flex-end', alignItems: 'flex-end' }}>
                                     <TouchableOpacity
                                         style={{ padding: 6, backgroundColor: '#50C2C9', borderRadius: 8 }}
-                                        onPress={() => props.push('InforDoctorScreen')}
+                                        onPress={() => _storeData(e.doctorId.toString())}
                                     >
                                         <Text style={{ color: 'white' }}> More </Text>
                                     </TouchableOpacity>

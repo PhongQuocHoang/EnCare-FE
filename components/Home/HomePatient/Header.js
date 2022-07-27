@@ -1,14 +1,24 @@
 import { View, Text, StyleSheet, Image, TouchableOpacity, SafeAreaView } from 'react-native';
 import React, { useEffect, useState } from 'react';
 import { getProfile } from '../../../apis/getApis';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const avatar = 'https://static.antoree.com/avatar.png';
 
 const Header = ({ navigation }) => {
     const [datas, setDatas] = useState({});
+    // const [namePaitent, setNamePatient] = useState('');
     useEffect(() => {
         getProfile(setDatas);
-        console.log(datas);
+
+        if (datas && datas.accountResponse && datas.accountResponse.name) {
+            AsyncStorage.setItem('NamePatient', datas?.accountResponse?.name.toString());
+        }
+        // AsyncStorage.getItem('NamePatient').then((result) => {
+        //     setNamePatient(result);
+
+        //     console.log(namePaitent);
+        // });
     }, []);
     return (
         <SafeAreaView style={styles.container}>
